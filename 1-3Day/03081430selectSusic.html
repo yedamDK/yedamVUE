@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>03081430selectSusic</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <select v-model="selectColor">
+        <option disabled value="">색을 선택해주세요</option>
+        <option>red</option>
+        <option>green</option>
+        <option>blue</option>
+      </select>
+      <br />
+      <p v-bind:style="{color:selectColor}">
+        선택한 색상은 {{selectColor}} 입니다.
+      </p>
+      <br />
+      <input v-model.lazy="lazyText" />
+      <p>입력 후 표시 {{lazyText}}</p>
+      <br />
+      <input v-model.number="myNumber" type="number" />
+      <p>100을 더해서 표시{{100+myNumber}}</p>
+
+      <input v-model.trim="myText3" />
+      <p>앞뒤 공백 제거 : {{myText3}}</p>
+
+      <h1>입력 폼 활용</h1>
+      <label> 이름 : <input v-model.lazy="myText4" /> </label>
+      <br />
+      <input type="radio" v-model="selectColor" value="red" /> 빨강
+      <input type="radio" v-model="selectColor" value="green" /> 녹생
+      <input type="radio" v-model="selectColor" value="파랑" /> 파랑
+      <p v-bind:style="{color:selectColor}">
+        내 이름은 {{myText4}} 이고 좋아하는 색은 {{selectColor}}
+      </p>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          selectColor: "",
+          lazyText: "",
+          myNumber: 0,
+          myText3: "",
+          myText4: "",
+        },
+      });
+    </script>
+  </body>
+</html>

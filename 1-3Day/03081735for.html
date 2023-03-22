@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <!-- jstl -> each-->
+    <div id="app">
+      <ul>
+        <li v-for="item in myArray">{{item}} : {{index}}</li>
+        <!-- 변수 in Vue data 안의 정보 :  in , of 둘다 되는데 in을 많이 쓴다 -->
+      </ul>
+      <ul>
+        <li v-for="item in objArray">{{item.name}} {{item.price}}</li>
+      </ul>
+
+      <ul>
+        <li v-for="n in 10">{{n}}x5={{n*5}}</li>
+      </ul>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          myArray: ["쨈빵", "빵", "크로와상"],
+          objArray: [
+            { name: "쨈빵", price: 1000 },
+            { name: "빵", price: 21000 },
+            { name: "크로와상", price: 3000 },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>

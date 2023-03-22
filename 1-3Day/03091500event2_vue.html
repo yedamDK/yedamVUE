@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.js"
+      integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+
+  <body>
+    <div id="app2">
+      <!-- input의 value 속성이 비어 있으면 모든 데이터(dataList)가 보이고
+    검색을 하면 해당되는 데이터만 보이도록 -->
+      <input type="text" />
+      <ul></ul>
+    </div>
+    <script>
+      let dataList = ["설악산", "한라산", "북한산", "백두산", "지리산"];
+      //다 실행하고 나서 function ()를 수행하라
+      $(document).ready(function () {
+        init();
+        //$('#app2') id가 app2 dom을 가지고 올때
+        // $('#app2 > input:text:eq(0)')
+        // id가 app2인 dom 자식 중에 input type text 인 자식 중에
+        // 인덱스가 0인 자식을 가지고 와라
+
+        $("#app2 > input:text:eq(0)").on("change", changeData);
+
+        //검색하였을 때 포함된 데이터만 나오게 하는 것
+        //데이터 변화가 있으면 app2의 첫번째 ul 안의 내용을 비워줘라(제거랑 다르다.)
+        //keyword에 input데이터를 넣는다. keyword가 빈칸이 아니면 산이름을 하나씩 꺼내서(each를 이용)
+        //특정키워드 포함되어있는지 match(jquery함수로 입력한 문자 keyword가 val에 포함되어 있느냐 비교 indexof와 비슷)로 확인해서 있으면 ul태그에 $('<li />')로 li태그를 생성해서 append한다 소리
+        //
+        function changeData() {
+          //id가 app2의 모든 ul 중 첫번째 내용을 비워라
+          $("#app2 > ul:first").empty();
+          // $('#app2 > ul:first').remove();
+          //id가 app2의 type이 text인 input 태그들 중 첫번째 인덱스eq(0) 인 input태그의 value를 keyword에 넣어준다.
+          let keyword = $("#app2 > input:text:eq(0)").val();
+          //데이터가 없으면 모든 데이터를 출력하고(else구문으로) 있으면 위에 4줄짜리 설명처럼 li태그로 append한다는 소리
+          if (keyword != "") {
+            $(dataList).each(function (idx, val) {
+              if (val.match(keyword)) {
+                $("#app2 > ul:first").append($("<li />").text(val));
+              }
+            });
+          } else {
+            init();
+          }
+        }
+        //init() -> Initailizse 초기화하다. 가지고 있는 모든 데이터를 li에 붙여서 ul안에 append한다
+
+        function init() {
+          $(dataList).each(function (idx, val) {
+            $("#app2 > ul").append($("<li />").text(val));
+          });
+        }
+      });
+    </script>
+    <!--여기서부터 vue-->
+    <div id="app3">
+      <input type="text" v-model="findWord" />
+      <ul>
+        <li v-for="item in findItems">{{item}}</li>
+      </ul>
+    </div>
+    <script>
+      let myArray = ["설악산", "한라산", "북한산", "백두산", "지리산"];
+      new Vue({
+        el: "#app3",
+        data: {
+          findWord: "",
+          items: myArray,
+        },
+        //위에 item이라고 해서 아래도 item 아님 items임
+        //items에 갖고 있는 데이터를 value에 넣어서
+        //indexOf: value에 있는 값이 findWord 어디에 위치한 지 확인
+        //조건에 맞은 애들이 this에 들어가고 이것이 findItems에 들어간다.
+        //모두 만족하면 items 전체 출력
+        //myArray가 원본 Items가 카피본 findItems는 li에 들어가는 정보
+        //items로 카피하는 이유는 myArray로 바로 사용하면 filter에 의해 배열이 바뀌므로
+        computed: {
+          findItems: function () {
+            if (this.findWord) {
+              return this.items.filter(function (value) {
+                return value.indexOf(this.findWord) > -1;
+              }, this);
+            } else {
+              return this.items;
+            }
+          },
+        },
+      });
+
+      /* Vue.js 컴포넌트 내에서 정의된 계산된 속성 중 하나인 findItems 입니다.이 속성은 인자를 받지 않으며,
+     items 배열에서 findWord 문자열이 포함된 값만을 필터링하여 새로운 배열을 반환합니다.
+     만약 findWord가 빈 문자열이나 null이라면, items 배열을 그대로 반환합니다.
+    filter() 메서드는 주어진 함수에 따라 테스트를 통과한 요소만을 갖는 새로운 배열을 생성합니다.
+    이 경우 함수는 각 항목의 value 값이 findWord 문자열을 포함하는지를 indexOf() 메서드를 사용하여 확인합니다.
+    indexOf()가 -1보다 큰 값을 반환하면 해당 항목의 value에 findWord가 포함된 것이므로, 해당 항목은 필터링된 배열에 포함됩니다.  
+    filter() 메서드는 추가적으로 this 매개변수를 받을 수 있으며,
+    이 경우 함수 내에서 this 값으로 사용됩니다. 이렇게 함으로써
+    this.findWord가 filter() 메서드의 findWord 매개변수가 아닌 Vue 컴포넌트의 findWord 속성을 참조하도록 보장할 수 있습니다. */
+    </script>
+
+    <div id="app4">
+      <p v-bind:style="{backgroundColor : mixColor}">{{mixColor}}</p>
+      <input type="range" v-model="R" min="0" max="255" />
+      <input type="range" v-model="G" min="0" max="255" />
+      <input type="range" v-model="B" min="0" max="255" />
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app4",
+        data: {
+          R: 255,
+          G: 150,
+          B: 100,
+        },
+        computed: {
+          mixColor: function () {
+            var ans = "RGB(" + this.R + "," + this.G + "," + this.B + ")";
+            return ans;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

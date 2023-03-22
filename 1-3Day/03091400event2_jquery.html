@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.js"
+      integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <div id="app2">
+      <!-- input의 value 속성이 비어 있으면 모든 데이터(dataList)가 보이고
+    검색을 하면 해당되는 데이터만 보이도록 -->
+      <input type="text" />
+      <ul></ul>
+    </div>
+    <script>
+      let dataList = ["설악산", "한라산", "북한산", "백두산", "지리산"];
+      //다 실행하고 나서 function ()를 수행하라
+      $(document).ready(function () {
+        init();
+        //$('#app2') id가 app2 dom을 가지고 올때
+        // $('#app2 > input:text:eq(0)')
+        // id가 app2인 dom 자식 중에 input type text 인 자식 중에
+        // 인덱스가 0인 자식을 가지고 와라
+
+        $("#app2 > input:text:eq(0)").on("change", changeData);
+
+        //검색하였을 때 포함된 데이터만 나오게 하는 것
+        //데이터 변화가 있으면 app2의 첫번째 ul 안의 내용을 비워줘라(제거랑 다르다.)
+        //keyword에 input데이터를 넣는다. keyword가 빈칸이 아니면 산이름을 하나씩 꺼내서(each를 이용)
+        //특정키워드 포함되어있는지 match(jquery함수로 입력한 문자 keyword가 val에 포함되어 있느냐 비교 indexof와 비슷)로 확인해서 있으면 ul태그에 $('<li />')로 li태그를 생성해서 append한다 소리
+        //
+        function changeData() {
+          //id가 app2의 모든 ul 중 첫번째 내용을 비워라
+          $("#app2 > ul:first").empty();
+          // $('#app2 > ul:first').remove();
+          //id가 app2의 type이 text인 input 태그들 중 첫번째 인덱스eq(0) 인 input태그의 value를 keyword에 넣어준다.
+          let keyword = $("#app2 > input:text:eq(0)").val();
+          //데이터가 없으면 모든 데이터를 출력하고(else구문으로) 있으면 위에 4줄짜리 설명처럼 li태그로 append한다는 소리
+          if (keyword != "") {
+            $(dataList).each(function (idx, val) {
+              if (val.match(keyword)) {
+                $("#app2 > ul:first").append($("<li />").text(val));
+              }
+            });
+          } else {
+            init();
+          }
+        }
+        //init() -> Initailizse 초기화하다. 가지고 있는 모든 데이터를 li에 붙여서 ul안에 append한다
+
+        function init() {
+          $(dataList).each(function (idx, val) {
+            $("#app2 > ul").append($("<li />").text(val));
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

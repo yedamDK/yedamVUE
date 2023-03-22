@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <ul>
+        <!--myArray 1~10까지 데이터를 담고 있음.-->
+        <!-- 짝수만 li tag에 등록-->
+        <!-- <li v-for="item in myArray" v-if="item%2==0">{{item}}</li> -->
+        <li v-for="item in myArray">{{item}}</li>
+      </ul>
+      <button v-on:click="evenDate()">짝수만 표시</button>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          myArray: [1, 2, 3, 4, 5, 6],
+        },
+        methods: {
+          evenDate: function () {
+            //filter 해당되는 데이터를 val에 넣어서 조건에 만족하는지 확인
+            //true만 모아서 새로운 배열을 만들어줌.
+            //function (val){}은 콜백함수
+            //filter는 foreach처럼 배열만 사용가능
+            this.myArray = this.myArray.filter(function (val) {
+              return val % 2 == 0;
+            });
+          },
+        },
+      });
+    </script>
+    <br />
+    <div id="app2">
+      <p>숫자 배열조작과 구구단 출력</p>
+      <ul>
+        <!-- v-for 버튼(변경, 삭제) 2개-->
+        <li v-for="item in myArray">
+          {{item}}
+          <button @click="change(item)">변경</button>
+          <!--delete는 자바스크립트에서 사용하기 때문에 쓰면 작동하지 않음.-->
+          <button v-on:click="deletes(item)">삭제</button>
+        </li>
+      </ul>
+      <button v-on:click="add()">추가</button>
+      <!--2단 3단 단수가 증가-->
+      <button v-on:click="showData()">구구단보이기</button>
+
+      <div v-if="visiable">
+        <!--구구단 출력 bind는 속성 value가 아님-->
+        <p v-for="(item) in 9" v-bind="no">{{no}} * {{item}}={{no*item}}</p>
+      </div>
+
+      <script>
+        new Vue({
+          el: "#app2",
+          data: {
+            no: 0,
+            visiable: false,
+            myArray: [2, 4, 6, 8, 10],
+          },
+          methods: {
+            change: function (item) {
+              this.no = item;
+            },
+            deletes: function (item) {
+              //구구단 수를 0으로 바꾸는 것
+              //this.no = 0;
+              //각 행을 삭제하는 것(배열 안에 해당 객체를 삭제했기 때문에 행도 삭제 됨)
+              // 건내온 item 값 val을 제외하고 새로운 dansuArray 가 생긴다
+              this.myArray = this.myArray.filter(function (val) {
+                return item != val;
+              });
+            },
+            add: function () {
+              this.no++;
+            },
+            showData: function () {
+              //삼항 연산자
+              return this.visiable == true
+                ? (this.visiable = false)
+                : (this.visiable = true);
+            },
+          },
+        });
+      </script>
+
+      <!-- <div id="app3">
+      <p>숫자 배열조작과 구구단 출력</p>
+      <ul>
+         myArray=> 1~0이라면 
+        <li v-for="item in 10" v-if="item % 2 ==0">
+          {{item}}
+          <button v-on:click="changeObj(0)">변경</button>
+          <button v-on:click="deleteObj(0)">삭제</button>
+        </li>
+      </ul>
+      <button v-on:click="add()">추가</button>
+      <button v-on:click="display()">구구단보이기</button>
+      <p v-for="n in 9" v-if="isShow">{{num}}x{{n}}={{n*num}}</p>
+
+      <script>
+        new Vue({
+          el: "#app3",
+          data: {
+            num: [],
+          },
+          methods: {
+            changeObj: function (index) {
+              this.num = item;
+            },
+            display: function () {
+              this.isShow = false;
+            },
+          },
+        });
+      </script> -->
+    </div>
+  </body>
+</html>

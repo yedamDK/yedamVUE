@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <p>금지 문자는 「{{forbiddentText}}」</p>
+      <textarea v-model="inputText"></textarea>
+      <br />
+      <p>앞으로 {{restSec}}</p>
+      <button v-on:click="startTimer">START</button>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          forbiddentText: "안돼",
+          inputText: "오늘은 날씨가 좋습니다.",
+          restSec: 10,
+          timerObj: null,
+        },
+        /*setInterval은 타이머를 맞추는 것 안에 => 함수로 실행하는데 1000(1초)마다 실행하는 것은 this.restSec-- 1씩 줄어든다
+        clearInterval가 타이머를 멈춘다 setInterval을 실행할 때마다 중복되지 않는 고유한 id가 나오는데
+        timerObj에 들어간다. 만약에 새롭게 시작하면 clearInterval로 인해서 기존의 setInterval는 멈추고 새로 시작한다.*/
+        methods: {
+          startTimer: function () {
+            clearInterval(this.timerObj);
+            this.restSec = 10;
+            this.timerObj = setInterval(() => {
+              this.restSec--;
+            }, 1000);
+          },
+        },
+        //변하는 데이터를 감시해서 일정조건이 달성하면 조건문 발동
+        watch: {
+          restSec: function () {
+            if (this.restSec <= 0) {
+              alert("제한 시간입니다.");
+              clearInterval(this.timerObj);
+            }
+          },
+          inputText: function () {
+            //실시간으로 입력된 값 비교 금지된 단어(this.forbiddentText)가 있는지 확인
+            var pos = this.inputText.indexOf(this.forbiddentText);
+            //금지된 단어가 들어오면 pos 0이상
+            if (pos >= 0) {
+              alert(this.forbiddentText + "는 입력할 수 없습니다.");
+              //textarea에 들어간 글자에서 금지어가 나온부분부터 잘라서 나타난다.
+              this.inputText = this.inputText.substr(0, pos);
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

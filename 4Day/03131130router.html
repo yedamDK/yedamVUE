@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>03131130router.html</title>
+    <script src="vue.js"></script>
+    <script src="vue-router.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>hello Vue-Router</h1>
+      <p>
+        <router-link to="/foo">Go to Foo</router-link>
+        <router-link to="/bar">Go to bar</router-link>
+      </p>
+      <!--router가 랜더링 도리 부분 정의-->
+      <!--각 컴포넌트들이 공통적으로 사용할 부분을 정의-->
+      <router-view></router-view>
+    </div>
+    <script>
+      // router에 사용할 component 작성
+      const Foo = {
+        template: `<div>foo</div>`,
+      };
+      const Bar = {
+        template: `<div>bar</div>`,
+      };
+
+      const routes = [
+        {
+          path: "/foo",
+          component: Foo,
+        },
+        {
+          path: "/bar",
+          component: Bar,
+        },
+      ];
+
+      // router 인스턴스 생성
+      const router = new VueRouter({
+        routes,
+      });
+
+      //Vue CLI -> 종종 쓰임
+      const app = new Vue({
+        router,
+      }).$mount("#app");
+      //new VUE를 #app에 갖다붙인다(mount)
+      // const app = new Vue({
+      //   el: '#app',
+      //   router: router
+      // })
+    </script>
+  </body>
+</html>

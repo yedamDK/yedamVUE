@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>props2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <my-component my-name="또치"></my-component>
+      <my-component my-name="희동"></my-component>
+      <my-component></my-component>
+    </div>
+    <script>
+      const MyComponent = {
+        template: `<p> 나는 {{myName}} 입니다.</p>`,
+        //props : ['']
+        props: {
+          myName: String,
+        },
+        created: function () {
+          //Vue 인스턴스 생성 후 실행
+          if (this.myName == null) {
+            this.myName = "마이콜";
+          }
+        },
+      };
+      new Vue({
+        el: "#app",
+        components: {
+          "my-component": MyComponent,
+        },
+      });
+    </script>
+
+    <hr />
+    <div id="app2">
+      <!-- JS자바스크립트 : for in, for of 같다
+      배열의 데이터를 바로 자식에게 줄 수 없으니까
+      괄호 안의 item을 넣어줘서 그것을 자식에게 보낸다.-->
+      <my-component
+        v-for="(item, index) in myArray2"
+        :my-name2="item"
+      ></my-component>
+    </div>
+    <script>
+      let MyComponent2 = {
+        template: `<p>나는 {{myName2}} 입니다.</p>`,
+        props: {
+          myName2: String,
+        },
+        created: function () {
+          if (this.myName2 == null) {
+            this.myName2 = "도우너";
+          }
+        },
+      };
+
+      new Vue({
+        el: "#app2",
+        data: {
+          myArray2: ["또치", "희동", "길동", "마이콜"],
+        },
+        components: {
+          "my-component": MyComponent2,
+        },
+      });
+    </script>
+
+    <hr />
+    <div id="app3">
+      <my-component
+        v-for="(item, index) in myNum"
+        :my-num="item"
+      ></my-component>
+    </div>
+    <script>
+      let MyComponent3 = {
+        template: `<p>{{myNum}}{{oddEven}} 입니다.</p>`,
+        props: {
+          myNum: Number,
+          oddEven: String,
+        },
+        computed: {
+          oddEven: function () {
+            if (this.myNum % 2 == 0) {
+              return "짝수";
+            } else {
+              return "홀수";
+            }
+          },
+        },
+      };
+
+      new Vue({
+        el: "#app3",
+        data: {
+          myNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        },
+        components: {
+          "my-component": MyComponent3,
+        },
+      });
+    </script>
+
+    <hr />
+    <div id="app4">
+      <my-component
+        v-for="(item, index) in myNum4"
+        :my-num4="item"
+      ></my-component>
+    </div>
+    <script>
+      let oddEven4 = ["홀수", "짝수"];
+      let MyComponent4 = {
+        template: `<p>{{myNum4}}{{oddEven4}} 입니다.</p>`,
+        props: {
+          myNum4: Number,
+          oddEven4: String,
+        },
+        created: function () {
+          if (this.myNum4 % 2 === 0) {
+            this.oddEven4 = oddEven4[1];
+          } else {
+            this.oddEven4 = oddEven4[0];
+          }
+        },
+      };
+
+      new Vue({
+        el: "#app4",
+        data: {
+          myNum4: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        },
+        components: {
+          "my-component": MyComponent4,
+        },
+      });
+    </script>
+  </body>
+</html>

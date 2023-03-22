@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <h2>ToDo리스트</h2>
+    <div id="app">
+      <div v-for="todo in todos">
+        <label>
+          <input type="checkbox" v-model="todo.done" />
+          <!-- 객체에 있는 값을 가져오기 위해 todo.done
+            위에서 todo라고 했기 때문에 todo라고 써야됨.
+            checkbox는 false로 하면 체크가 안됨 true면 체크 -->
+          <span :class="{donestyle:todo.done}"> {{todo.text}} </span>
+          <!--true가 되었을 때 span 스타일이 적용된다.-->
+          <!-- true가 되면 -->
+        </label>
+      </div>
+      <p>{{remaining}} / {{todos.length}}</p>
+      <!-- 처리한 수 // 전체 수 -->
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          todos: [
+            { done: true, text: "빵사기" },
+            { done: false, text: "커피사기" },
+          ],
+        },
+        computed: {
+          remaining: function () {
+            return this.todos.filter(function (val) {
+              console.log(val);
+              return val.done;
+              //val.done는 반환해줄 수 있는 값(선택한 것이 없으면 반환할 값이 0)
+              /*val은 remaining computed 속성에서 사용되는 함수의 매개변수입니다.(체크된 행)
+              이 함수는 "filter()를 사용하여 this.todos 배열에서 val.done이 true인 객체들의 수를 반환"합니다.              
+              즉, val은 this.todos 배열에서 각 객체를 의미하며, val.done은 해당 객체의 done 속성의 값입니다.
+              이 값이 true이면, 즉 체크박스가 선택되었으면 filter() 함수에 의해 배열에 남아있게 되고,
+              length 속성에 의해 remaining에 표시됩니다.
+              따라서 val은 배열에서 현재 반복되고 있는 객체를 나타내는 변수입니다.*/
+            }).length;
+          },
+        },
+      });
+    </script>
+  </body>
+  <style>
+    .donestyle {
+      text-decoration: line-through;
+      color: crimson;
+    }
+  </style>
+</html>

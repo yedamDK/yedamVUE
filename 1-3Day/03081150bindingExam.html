@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bindingExam</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+</head>
+<style>
+    .style-through{    
+    text-decoration: underline;
+    color: blue;
+  }
+  
+   .strike-through{
+    color: red;
+    text-decoration: underline;
+  } 
+</style>
+<body>
+   <div id="app">
+    <a href="myLink">링크</a>
+    <br>
+    <img v-bind:src="fileName">강아지표기</img>
+    <p v-bind:align="leftAlign">텍스트 왼쪽 정렬</p>
+    <p v-bind:align="centerAlign">텍스트 가운데 정렬</p>
+    <p v-bind:align="rightAlign">텍스트 오른쪽 정렬</p>
+    <p v-bind:style="{color: myColor}">인라인 스타일 글자색 빨갛게</p>
+    <p v-bind:style="{fontSize: mySize}">인라인 스타일 글자크기 150% 크게</p>
+    <p v-bind:style="{fontSize: mySize,color: myColor,backgroundColor: myBackColor} ">인라인 스타일로 글자크기 150% 빨간색 배경 노랑색</p>
+    <p v-bind:style="[{textDecoration: line}, {color: blue}]">blue underline 지정</p>
+<!-- color부터 하고 textDecoration를 하면 color가 안 먹힌다. -->
+    <p v-bind:class="styleClass">blue underline style-through</p>
+    <p v-bind:class="[styleClass, strikeClass]">style 안에서 나중에 선언 된 것이 구현된다. 클래스 선언 순서랑 상관없다. </p>
+   </div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      myLink : 'https.www.naver.com',
+      fileName: 'fighting.PNG',
+      leftAlign: 'left',
+      rightAlign: 'right',
+      centerAlign: 'center',
+      myColor: 'red',
+      mySize: '150%',
+      myBackColor: 'yellow',
+      blue: 'blue',
+      line: 'underline',
+      styleClass: 'style-through',
+      strikeClass : 'strike-through',   
+
+    }
+  })
+</script>   
+  
+</body>
+</html>

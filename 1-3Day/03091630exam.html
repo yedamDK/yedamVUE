@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>제한 시간 내에 문자 입력하기</h1>
+      <label>
+        금지문자(,로 나누어 복수입력가능)
+        <input type="text" v-model="forbiddentText" :disabled="!isWritable" />
+        <!--v-bind 생략가능-->
+      </label>
+      <br />
+      <label>
+        제한시간을 입력하세요(초)
+        <input
+          type="number"
+          v-model.number="setTime"
+          v-bind:disabled="!isWritable"
+        />
+        <!--number를 씀으로서 문자로 안 넘어감-->
+        <button v-on:click="start" v-bind:disabled="!isWritable">시작</button>
+      </label>
+
+      <br />
+      <!--함수는 강제로 실행해야 하기 때문에 예를 들어 limitTime()라고 씀
+      computed는 능동적으로 값이 변화하면 바뀜-->
+      <p>남은 시간: {{limitTime}}초</p>
+      <textarea v-model="inputText" v-bind:disabled="isWritable"></textarea>
+
+      <br />
+      <p>{{wordCnt}}개의 문자를 입력하였습니다.</p>
+
+      <br />
+      <p>벌점 : {{resultScore}}(금지문자 1개당 12점)</p>
+    </div>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          forbiddentText: "",
+          isWritable: true,
+          limitTime: 0,
+          setTime: 0,
+          inputText: "",
+          timerObj: null, //타이머 실행 시 setInterval 고유한 id를 timerObj에 담아줌
+          wordCnt: 0,
+          forbiddenCnt: 0,
+        },
+        methods: {
+          start: function () {
+            this.isWritable = false;
+            this.limitTime = this.setTime;
+            //setTime은 변화시키지 않기 위해 limitTime에 복사해서 넣어줌
+            const vueObj = this;
+            //본인 자신을 가르키는 this(객체 new Vue를 의미)를 vueObj에 넣어줌
+
+            this.timerObj = setInterval(function () {
+              vueObj.limitTime--;
+              /*vueObj를 선언 안 하고 this.limitTime--; 라고 했으면
+              this는 전역객체 window를 의미함 객체 Vue를 의미하지 않음
+              limitTime은 객체 안에 있기 때문에 전역객체 window에 없어서 작동하지 않음. */
+              /*start는 Vue 안에 속하기 때문에 start의 함수 안에서 this는 vue 의미*/
+              /*입력 함수 function (){} 대신에 arrow함수 () =>{} 랑 콜백함수를 쓸 때 그리고 새로운 함수를 선언하고 this를 쓰면
+              전역객체 window를 나타낸다.*/
+              //console.log(this)로 확인하면서 쓰기
+            }, 1000);
+            //1000밀리초 =1초 마다 1씩 감소하겠다.
+          },
+        },
+        //변하는 데이터를 실시간 감시해서 일정조건이 달성하면 조건문 발동
+        watch: {
+          limitTime: function () {
+            if (this.limitTime <= 0) {
+              alert("제한시간에 도달했습니다.");
+              clearInterval(this.timerObj);
+              //clearInterval 타이머를 멈추겠다.
+              this.isWritable = true;
+              this.wordCnt = this.inputText.length;
+            }
+          },
+          inputText: function () {
+            //실시간으로 입력된 값 비교 금지된 단어(this.forbiddentText)가 있는지 확인
+            let dataList = this.forbiddentText.split(",");
+            //금지어를 ,로 나눠서 배열로 저장
+            for (let i = 0; i < dataList.length; i++) {
+              let keyword = dataList[i];
+              //keyword 금지어 중 하나
+              let pos = this.inputText.indexOf(keyword);
+              //입력한 값 inputText 중 금지어 keyword가 나타난 위치indexOf 0부터 시작
+              if (pos > -1) {
+                alert(this.forbiddentText + "는 입력할 수 없습니다.");
+                //+ 대신에 =를 입력하면 alert는 똑같이 는 입력할 수 없습니다.가 뜨지만 forbiddentText이 는 입력할 수 없습니다.로 바뀐다.
+                this.forbiddenCnt++;
+                //금지어 횟수추가
+                this.inputText = this.inputText.substring(0, pos);
+                //금지어 나온 부분을 자른다.
+                this.limitTime += 5;
+                //틀릴 시 5초 추가
+              }
+            }
+          },
+        },
+        //벌점계산
+        computed: {
+          resultScore: function () {
+            return this.forbiddenCnt * 12;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
